@@ -39,6 +39,9 @@ def parse_links_and_address(pages, time_wait=5):
 
                 d[flat_id]['total_square'] = n[0]
                 d[flat_id]['living_square'] = n[1]
+
+                ftype = parser2.find('div', {'data-name': "OfferSummaryInfoItem"}).text[9:]
+                d[flat_id]['type'] = ftype
             except Exception:
                 continue
 
@@ -83,28 +86,18 @@ def write_to_db(d):
         desc = ', '.join(d[i]['description'])
         total = d[i]['total_square']
         living = d[i]['living_square']
+        ftype = d[i]['type']
         print(price, link, address, desc, total, living)
-        cur.execute(f"""INSERT INTO flats(flat_id, price, link, address, desc, total_square, living_square) 
-        VALUES({i}, {price}, "{link}", "{address}", "{desc}", "{total}", "{living}")""")
+        cur.execute(f"""INSERT INTO flats(flat_id, price, link, address, desc, total_square, living_square, type) 
+        VALUES({i}, {price}, "{link}", "{address}", "{desc}", "{total}", "{living}", "{ftype}")""")
     con.commit()
     con.close()
 
 
-
 def main():
     t = time()
-    # res = parse_one('https://ekb.cian.ru/sale/flat/292053689/')
-    # print('Name:', ', '.join(res['description']))
-    # print('Flat price:', res['price'])
-    # print('Address:', ', '.join(res['address']))
-    # print('Cian link:', res['link'])
-    # print(res['total_square'])
-    # print(res['living_square'])
-    # print('----------')
-    flats = parse_links_and_address(52, time_wait=5)
-
+    flats = parse_links_and_address(53, time_wait=5)
     write_to_db(flats)
-
     print('Time:', time() - t)
 
 
