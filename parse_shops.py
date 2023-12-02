@@ -1,54 +1,48 @@
-from pprint import pprint
 from geopy.geocoders import Nominatim
 import requests
 from bs4 import BeautifulSoup
 import sqlite3
 
 
-def add_to_db_shops(name):  # Название магазина на сайте, с которого парсим
+def add_to_db_shops(name):
+    """
+    Функция для парсинга магазинов по названию
+    """
     req = requests.get(f'https://ufo.spr.ru/ekaterinburg/branches/{name}/')
     parser = BeautifulSoup(req.text, 'lxml')
 
-    con = sqlite3.connect('db.sqlite')  # Оформление подключения к бд
+    con = sqlite3.connect('db.sqlite')
     cur = con.cursor()
+
+    addresses = []
 
     for i in parser.find_all('div', {'class': "col"}):  # Ищем все теги
         res = i.text
         if res.startswith(' Екатеринбург') and len(res) > 15:  # Если удовлетворяет условию. то заносим в бд
-            cur.execute(f"""INSERT INTO shops(address, type) VALUES('{res.strip().replace(' г.', '')}', '{name}')""")
+            res = res.strip().replace(' г.', '').replace(' ул.', '').replace(' бульв.', '')
+            res = res.replace(' пер.', '').replace(' просп.', '')
+            addresses.append(res)
+            cur.execute(f"""INSERT INTO shops(address, type) VALUES('{res}', '{name}')""")
 
-    con.commit()
-    con.close()
+    addresses = [i[0] for i in cur.execute("""SELECT address FROM shops""").fetchall()]
 
-
-def get_coords(addresses):
     geolocator = Nominatim(user_agent="Tester")
-    con = sqlite3.connect('db.sqlite')
-    cur = con.cursor()
     for address in addresses:
         old_address = address
         if address[-2] == '-':
             address = address[:-2]
         if address[-4:-2] == 'к.':
             address = address[:-6]
-        address = address.replace(' ул.', '').replace(' бульв.', '').replace(' пер.', '').replace(' просп.', '')
         location = geolocator.geocode(address)
         if location:
-            cur.execute(f"""UPDATE shops SET coords='{location.latitude}; {location.longitude}' WHERE address='{old_address}'""")
-        else:
-            print(address)
+            cur.execute(f"""UPDATE shops SET coords='{location.latitude}; {location.longitude}' 
+            WHERE address='{old_address}'""")
+
     con.commit()
     con.close()
 
 
 if __name__ == '__main__':
     shops = ['diksi', 'magnit', 'pyaterochka', 'ariant', 'vernyi']
-    for i in shops:
-        add_to_db_shops(i)
-
-    con = sqlite3.connect('db.sqlite')
-    cur = con.cursor()
-    res = [i[0] for i in cur.execute("""SELECT address FROM shops""").fetchall()]
-    con.close()
-    get_coords(res)
-
+    for shop_name in shops:
+        add_to_db_shops(shop_name)
