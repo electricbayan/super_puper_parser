@@ -13,9 +13,7 @@ for i in cur.execute("""SELECT * FROM flats"""):
     d[i[0]]['living_square'] = i[6]
     d[i[0]]['type'] = i[7]
 
-# for i in d.keys():
-#     f.append(d[i]['address'])
-import sqlite3
+
 def fetch_coordinates(apikey, address):
     base_url = "https://geocode-maps.yandex.ru/1.x"
     response = requests.get(base_url, params={
@@ -32,14 +30,14 @@ def fetch_coordinates(apikey, address):
     most_relevant = found_places[0]
     lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
     return lon, lat
-apikey = '2f7256a0-bdd3-43e5-9814-c1cb0b63e6af'
-for i in d.keys():
-    coords = fetch_coordinates(apikey, d[i]['address'])
-    cooooooooooooooooords[i]='; '.join(coords)
 
-for i in cooooooooooooooooords.keys()[:800]:
-    cur.execute(f"""INSERT INTO flats(coords) VALUES('{cooooooooooooooooords[i]}')""")
+
+apikey = 'e9d96ce6-6d3b-4d62-9114-2185b11c9b8a'
+for i in d.keys()[:800]:
+    coords = fetch_coordinates(apikey, d[i]['address'])
+    cooooooooooooooooords[i] = '; '.join(coords)
+
+for i in cooooooooooooooooords.keys():
+    cur.execute(f"""UPDATE flats SET coords='{cooooooooooooooooords[i]}' WHERE flat_id={i}""")
 con.commit()
 con.close()
-
-
