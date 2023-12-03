@@ -51,7 +51,7 @@ if __name__ == '__main__':
     coords_dict = {}
     keys = list(flats.keys())
 
-    for i in keys[800:]:
+    for i in keys[:800]:
         coords = fetch_coordinates(apikey, flats[i]['address'])
         coords_dict[i] = '; '.join(coords)
     for i in coords_dict.keys():
