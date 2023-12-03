@@ -38,7 +38,7 @@ def fetch_coordinates(api_key, address):
 
     most_relevant = found_places[0]
     lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
-    return lon, lat
+    return lat, lon
 
 
 if __name__ == '__main__':
@@ -49,8 +49,9 @@ if __name__ == '__main__':
 
     flats = get_flats_data_from_db(cur)
     coords_dict = {}
+    keys = list(flats.keys())
 
-    for i in flats.keys()[800:]:
+    for i in keys[800:]:
         coords = fetch_coordinates(apikey, flats[i]['address'])
         coords_dict[i] = '; '.join(coords)
     for i in coords_dict.keys():
