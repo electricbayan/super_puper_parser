@@ -42,7 +42,7 @@ def fetch_coordinates(api_key, address):
 
 
 if __name__ == '__main__':
-    apikey = 'e9d96ce6-6d3b-4d62-9114-2185b11c9b8a'
+    apikey = '2f7256a0-bdd3-43e5-9814-c1cb0b63e6af'
 
     con = sqlite3.connect('db.sqlite')
     cur = con.cursor()
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     coords_dict = {}
     keys = list(flats.keys())
 
-    for i in keys[:800]:
+    for i in keys[:600]:
         coords = fetch_coordinates(apikey, flats[i]['address'])
         coords_dict[i] = '; '.join(coords)
     for i in coords_dict.keys():
