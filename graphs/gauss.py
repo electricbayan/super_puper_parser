@@ -5,6 +5,7 @@ from sklearn.neighbors import KernelDensity
 from scipy.interpolate import make_interp_spline
 from matplotlib.ticker import FuncFormatter
 from database_functions import get_flats_data_from_db
+import os
 
 
 def plot_price_distribution(apartments):
@@ -36,9 +37,9 @@ def plot_price_distribution(apartments):
     plt.show()
 
 
-con = sqlite3.connect('db.sqlite')
+con = sqlite3.connect(os.path.dirname(os.getcwd()) + "\\db.sqlite")
 cur = con.cursor()
 
-apartment_data = get_flats_data_from_db(cur)
+apartment_data = get_flats_data_from_db(con)
 
 plot_price_distribution(apartment_data)

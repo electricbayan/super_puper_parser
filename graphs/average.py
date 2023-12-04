@@ -9,6 +9,11 @@ con = sqlite3.connect(os.path.dirname(os.getcwd()) + "\\db.sqlite")
 cur = con.cursor()
 d = get_flats_data_from_db(con)
 
+bar_width = 0.35
+
+index = range(14)
+
+
 district_data = {}
 for i in d.keys():
     district = d[i]['district']
@@ -30,7 +35,7 @@ fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 
 axes[0].bar(districts, avg_prices, color='blue')
 axes[0].set_title('Средние Цены (млн)')
-axes[0].tick_params(axis='x', rotation=90)
+axes[0].tick_params(axis='x', rotation=45)
 
 axes[1].bar(districts, avg_price_per_sqm, color='purple')
 axes[1].set_title('Средняя Цена за кв. метр (тыс.)')

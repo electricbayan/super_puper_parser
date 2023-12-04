@@ -1,6 +1,7 @@
 import sqlite3
 import matplotlib.pyplot as plt
 from database_functions import get_flats_data_from_db
+import os
 
 
 def plot_type_distribution_by_district(flats_data):
@@ -36,9 +37,9 @@ def plot_type_distribution_by_district(flats_data):
     plt.show()
 
 
-con = sqlite3.connect('db.sqlite')
+con = sqlite3.connect(os.path.dirname(os.getcwd()) + "\\db.sqlite")
 cur = con.cursor()
 
-flats_data = get_flats_data_from_db(cur)
+flats_data = get_flats_data_from_db(con)
 
 plot_type_distribution_by_district(flats_data)
