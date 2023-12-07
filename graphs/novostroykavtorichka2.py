@@ -1,6 +1,7 @@
 import sqlite3
 import matplotlib.pyplot as plt
 
+
 def get_flats_data_from_db(cursor):
     d = {}
     for string in cursor.execute("""SELECT * FROM flats"""):
