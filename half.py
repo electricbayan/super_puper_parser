@@ -44,7 +44,7 @@ axes[1].set_title('Средняя Цена за кв. метр (тыс.)')
 axes[1].tick_params(axis='x', rotation=90)
 
 axes[2].bar(districts, avg_t_squares, color='orange')
-axes[2].set_title('Средняя Общая Площадь')
+axes[2].set_title('Средняя Общая Площадь ')
 axes[2].tick_params(axis='x', rotation=90)
 
 plt.tight_layout()
