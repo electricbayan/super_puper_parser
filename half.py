@@ -49,7 +49,7 @@ axes[2].tick_params(axis='x', rotation=90)
 
 plt.tight_layout()
 
-plt.savefig('all.png')
+
 
 
 plt.show()
